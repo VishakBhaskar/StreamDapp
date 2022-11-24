@@ -1,6 +1,7 @@
 const hre = require("hardhat");
 const { Framework } = require("@superfluid-finance/sdk-core");
-const { network } = require("hardhat");
+const frameworkDeployer = require("@superfluid-finance/ethereum-contracts/scripts/deploy-test-framework");
+const { network, ethers } = require("hardhat");
 require("dotenv").config();
 
 //to run this script:
@@ -15,17 +16,29 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  const provider = new hre.ethers.providers.JsonRpcProvider(
-    process.env.GOERLI_URL
-  );
+  // const provider = new hre.ethers.providers.JsonRpcProvider(
+  //   process.env.GOERLI_URL
+  // );
 
-  const provider1 = new hre.ethers.providers.JsonRpcProvider(
-    `http://127.0.0.1:8545/`
-  );
+  // const sf = await Framework.create({
+  //   chainId: (await provider.getNetwork()).chainId,
+  //   provider1,
+  // });
+  let sfDeployer;
 
-  const sf = await Framework.create({
-    chainId: (await provider.getNetwork()).chainId,
-    provider1,
+  sfDeployer = await frameworkDeployer.deployTestFramework();
+
+  // GETTING SUPERFLUID FRAMEWORK SET UP
+
+  // deploy the framework locally
+  contractsFramework = await sfDeployer.getFramework();
+
+  // initialize framework
+  sf = await Framework.create({
+    chainId: 31337,
+    provider: ethers.provider,
+    resolverAddress: contractsFramework.resolver, // (empty)
+    protocolReleaseVersion: "test",
   });
 
   const signers = await hre.ethers.getSigners();
