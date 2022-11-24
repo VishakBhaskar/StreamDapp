@@ -1,18 +1,7 @@
-import Head from 'next/head';
-import 'tailwindcss/tailwind.css';
-import DashboardLayout from '../src/dashboard/layout';
+import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
-  return (
-    <>
-      <Head>
-        <title>Salvia-kit Dashboard v6 Next.js</title>
-      </Head>
-      <DashboardLayout>
-        <Component {...pageProps} />
-      </DashboardLayout>
-    </>
-  );
+  return <Component {...pageProps} />;
 }
 
 export default MyApp;
